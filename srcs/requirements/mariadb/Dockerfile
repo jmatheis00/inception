@@ -4,8 +4,10 @@ ARG DB_NAME \
     DB_USER \
     DB_PASS
 
+#updates package repositories, installs mariadb and mariadb-client
 RUN apk update && apk add --no-cache mariadb mariadb-client
 
+#creates mysqld dir + permissions
 RUN mkdir /var/run/mysqld; \
     chmod 777 /var/run/mysqld; \
     { echo '[mysqld]'; \
@@ -20,6 +22,7 @@ RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 EXPOSE 3306
 
+#copies .sh into current working dir & runs it
 COPY requirements/mariadb/conf/create_db.sh .
 RUN sh create_db.sh && rm create_db.sh
 USER mysql
