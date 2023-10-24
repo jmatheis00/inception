@@ -43,10 +43,12 @@ clean: down
 
 fclean:
 	@printf "$(YELLOW)Total clean of all configurations docker\n$(RESET)"
-	@docker stop $$(docker ps -qa)
-	@docker system prune --all --force --volumes
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down
+	@docker system prune --all
 	@docker network prune --force
 	@docker volume prune --force
+	@docker volume create wp-volume
+	@docker volume create db-volume
 	@printf "$(GREEN)Succesfull total clean of all configurations docker\n$(RESET)"
 
 kill: fclean
