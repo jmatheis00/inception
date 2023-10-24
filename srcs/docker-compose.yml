@@ -74,6 +74,7 @@ services:
 volumes:
   wp-volume:
 #options for volume driver
+    driver: local
 #bind: allows to bind-mount host dirs into my containers
     driver_opts:
       o: bind
@@ -83,6 +84,7 @@ volumes:
       device: /home/${USER}/data/wordpress
 
   db-volume:
+    driver: local
     driver_opts:
       o: bind
       type: none
