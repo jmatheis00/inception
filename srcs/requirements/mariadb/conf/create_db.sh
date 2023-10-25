@@ -1,10 +1,10 @@
 #!bin/sh
 
-if [ ! -d "/var/lib/mysql/mysql" ]; then
-        chown -R mysql:mysql /var/lib/mysql
-        # init database
-        mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm
-fi
+# if [ ! -d "/var/lib/mysql/mysql" ]; then
+#         chown -R mysql:mysql /var/lib/mysql
+#         # init database
+#         mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm
+# fi
 
 if [ ! -d "/var/lib/mysql/wordpress" ]; then
         cat << EOF > /tmp/create_db.sql

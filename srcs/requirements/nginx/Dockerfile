@@ -1,5 +1,9 @@
-FROM alpine:3.16
-RUN	apk update && apk upgrade && apk add --no-cache nginx
-#Docker container listens on port 443 (HTTPS traffic)
+FROM debian:11
+RUN apt-get update && apt-get upgrade -y \
+	&& apt-get install -y nginx && apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Docker container listens on port 443 (HTTPS traffic)
 EXPOSE 443
+
 CMD ["nginx", "-g", "daemon off;"]
