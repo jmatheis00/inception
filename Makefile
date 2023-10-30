@@ -14,17 +14,17 @@ RESET		=	\e[0m
 
 all:
 	@printf "$(GREEN)Launch configuration ${name}...\n$(RESET)"
-	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d
 	@printf "$(GREEN)Succesfull launch ${name}\n$(RESET)"
+# @bash srcs/requirements/wordpress/tools/make_dir.sh
 
 # --build: rebuilds the Docker images before starting the container
 # ensures that any changes made are incorporated into the images before starting
 build:
 	@printf "$(GREEN)Building configuration ${name}...\n$(RESET)"
-	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
 	@printf "$(GREEN)Successfull configuration building ${name}\n$(RESET)"
+# @bash srcs/requirements/wordpress/tools/make_dir.sh
 
 down:
 	@printf "$(YELLOW)Stopping configuration ${name}...\n$(RESET)"

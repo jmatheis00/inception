@@ -1,98 +1,14 @@
 version: '3'
 
 services:
-#service named nginx, represents a container
   nginx:
     build:
-#build context: dir of .yml file
       context: .
-#dockerfile used to build the nginx container
       dockerfile: requirements/nginx/Dockerfile
-#sets name of container
     container_name: nginx
-#depends on another service
-#nginx only start after wordpress has started
-    depends_on:
-      - wordpress
-#allows external access to nginx over HTTPS
     ports:
       - "443:443"
-#network connected to
-    networks:
-      - inception
-    volumes:
-    #provides ngnix configuration files
-      - ./requirements/nginx/conf/:/etc/nginx/http.d/
-    #provides the certificates
-      - ./requirements/nginx/tools:/etc/nginx/ssl/
-    #here are the wordpress files stored
-      - wp-volume:/var/www/
-    #if stop or crash, restarts automatically
+    # volumes:
+    #   - nginx:/etc/nginx/conf.d
+    #   - /data/html:/var/www/html
     restart: always
-
-  mariadb:
-    build:
-      context: .
-      dockerfile: requirements/mariadb/Dockerfile
-#passes build-time arguments to the dockerfile
-#used inside the Dockerfile to configure MariaDB
-      args:
-        DB_NAME: ${DB_NAME}
-        DB_USER: ${DB_USER}
-        DB_PASS: ${DB_PASS}
-        DB_ROOT: ${DB_ROOT}
-    container_name: mariadb
-#allows external access to MariaDB database server
-    ports:
-      - "3306:3306"
-    networks:
-      - inception
-    volumes:
-    #dir inside mariadb, used to store MariaDB's database files
-      - db-volume:/var/lib/mysql
-    restart: always
-
-  wordpress:
-    build:
-      context: .
-      dockerfile: requirements/wordpress/Dockerfile
-      args:
-        DB_NAME: ${DB_NAME}
-        DB_USER: ${DB_USER}
-        DB_PASS: ${DB_PASS}
-    container_name: wordpress
-    depends_on:
-      - mariadb
-    networks:
-      - inception
-    volumes:
-    #where wordpress files are stored
-      - wp-volume:/var/www/
-    restart: always
-
-#where to store data from WordPress and MariaDB containers
-volumes:
-  wp-volume:
-#options for volume driver
-    driver: local
-#bind: allows to bind-mount host dirs into my containers
-    driver_opts:
-      o: bind
-#no specific volume type
-      type: none
-#specifies host dir that will be bound to the named volumes
-      device: /home/${USER}/data/wordpress
-
-  db-volume:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: /home/${USER}/data/mariadb
-
-networks:
-#network name
-    inception:
-#bridge driver = default driver for user-defined networks
-#allows connected containers to communicate with others in the same network
-        driver: bridge
