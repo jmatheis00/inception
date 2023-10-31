@@ -6,13 +6,21 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Docker container listens on port 443 (HTTPS traffic)
-# COPY ./conf/nginx.conf /etc/nginx/http.d/
-# COPY index.html /usr/share/nginx/html
+RUN mkdir -p /etc/nginx/ssl
 
-COPY ./index.html /usr/share/nginx/html/index.html
-WORKDIR /usr/share/nginx/html
-RUN date +%x_%H:%M:%S:%N >> ./index.html
+COPY /requirements/nginx/tools/jmatheis.42.fr.crt /etc/nginx/ssl/
+COPY /requirements/nginx/tools/jmatheis.42.fr.key /etc/nginx/ssl/
+
+# Copy Nginx configuration file
+COPY requirements/nginx/conf/nginx.conf /etc/nginx/sites-available/jmatheis.42.fr
+
+# Create symbolic link to enable the configuration
+RUN ln -s /etc/nginx/sites-available/jmatheis.42.fr /etc/nginx/sites-enabled/
+# Remove the default Nginx configuration
+RUN rm /etc/nginx/sites-enabled/default
+
+#test
+COPY /requirements/nginx/index.html /var/www/html/index.html
 
 EXPOSE 443
 
