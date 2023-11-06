@@ -1,26 +1,29 @@
 version: '3'
 
 services:
-  nginx:
-    build:
-      context: .
-      dockerfile: requirements/nginx/Dockerfile
-    container_name: nginx
-    ports:
-      - "443:443"
-    restart: always
+  # nginx:
+  #   build:
+  #     context: .
+  #     dockerfile: requirements/nginx/Dockerfile
+  #   container_name: nginx
+  #   ports:
+  #     - "443:443"
+  #   restart: always
   mariadb:
     build:
       context: .
       dockerfile: requirements/mariadb/Dockerfile
-      args:
-        DB_NAME: ${DB_NAME}
-        DB_USER: ${DB_USER}
-        DB_PASS: ${DB_PASS}
-        DB_ROOT: ${DB_ROOT}
+    env_file:
+      - ./.env
+      # args:
+      #   DB_NAME: ${DB_NAME}
+      #   DB_USER: ${DB_USER}
+      #   DB_PASS: ${DB_PASS}
+      #   DB_ROOT: ${DB_ROOT}
     container_name: mariadb
     ports:
       - "3306:3306"
-    # volumes:
+    volumes:
+        - ./requirements/mariadb/conf:/conf
     #   - db-volume:/var/lib/mysql
     restart: always
