@@ -1,16 +1,18 @@
 #!/bin/bash
-exec > >(tee -a /var/log/create_db.log)
-exec 2>&1
-
-set -e
-
-sleep 10
 
 echo "Creating initial database and user..."
 echo "DB_USER: $DB_USER"
 echo "DB_PASS: $DB_PASS"
 echo "DB_NAME: $DB_NAME"
 echo "DB_ROOT: ${DB_ROOT}"
+
+# Start MySQL server if its not already running
+if ! service mariadb status > /dev/null; then
+    service mariadb start
+fi
+
+# Wait for MySQL server to start
+sleep 5
 
 # Create initial database and user
 mysql -u root -p"${DB_ROOT}" <<EOF
@@ -21,6 +23,8 @@ FLUSH PRIVILEGES;
 EOF
 
 echo "initial database '$DB_NAME' and user '$DB_USER' created successfully!"
+
+# Wait for MySQL server to settle
 sleep 5
 
 echo "Creating wordpress database..."
@@ -33,3 +37,4 @@ FLUSH PRIVILEGES;
 EOF
 
 echo "WordPress database created successfully!"
+exec mysqld_safe

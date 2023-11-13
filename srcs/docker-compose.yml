@@ -26,4 +26,4 @@ services:
     volumes:
         - ./requirements/mariadb/conf:/conf
     #   - db-volume:/var/lib/mysql
-    restart: always
+    # restart: always
