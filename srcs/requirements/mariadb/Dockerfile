@@ -18,4 +18,7 @@ RUN mkdir -p /var/run/mysqld && chown -R mysql:mysql /var/run/mysqld
 # Copy the script to the container
 COPY /requirements/mariadb/conf/create_db.sh /create_db.sh
 RUN chmod +x /create_db.sh
+
 ENTRYPOINT ["/create_db.sh"]
+# mysqld becomes the main process for the container
+CMD ["mysqld"]

@@ -27,14 +27,16 @@ echo "initial database '$DB_NAME' and user '$DB_USER' created successfully!"
 # Wait for MySQL server to settle
 sleep 5
 
-echo "Creating wordpress database..."
-mysql -u root -p"${DB_ROOT}" <<EOF
-USE ${DB_NAME};
-CREATE DATABASE IF NOT EXISTS wordpress;
-CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
-GRANT ALL PRIVILEGES ON wordpress.* TO '${DB_USER}'@'%';
-FLUSH PRIVILEGES;
+if [ ! -d "/var/lib/mysql/wordpress" ]; then
+    echo "Creating wordpress database..."
+    mysql -u root -p"${DB_ROOT}" <<EOF
+    USE ${DB_NAME};
+    CREATE DATABASE IF NOT EXISTS wordpress;
+    CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
+    GRANT ALL PRIVILEGES ON wordpress.* TO '${DB_USER}'@'%';
+    FLUSH PRIVILEGES;
 EOF
+    echo "WordPress database created successfully!"
+fi
 
-echo "WordPress database created successfully!"
-exec mysqld_safe
+exec mysqld

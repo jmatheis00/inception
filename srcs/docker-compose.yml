@@ -1,14 +1,14 @@
 version: '3'
 
 services:
-  # nginx:
-  #   build:
-  #     context: .
-  #     dockerfile: requirements/nginx/Dockerfile
-  #   container_name: nginx
-  #   ports:
-  #     - "443:443"
-  #   restart: always
+  nginx:
+    build:
+      context: .
+      dockerfile: requirements/nginx/Dockerfile
+    container_name: nginx
+    ports:
+      - "443:443"
+    restart: always
   mariadb:
     build:
       context: .
@@ -23,7 +23,13 @@ services:
     container_name: mariadb
     ports:
       - "3306:3306"
-    volumes:
-        - ./requirements/mariadb/conf:/conf
-    #   - db-volume:/var/lib/mysql
+    # volumes:
+        # - db_volume:/var/lib/mysql
     # restart: always
+
+# volumes:
+#   db_volume:
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: /home/jmatheis/data/mariadb
