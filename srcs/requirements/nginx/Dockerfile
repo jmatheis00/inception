@@ -20,7 +20,9 @@ RUN ln -s /etc/nginx/sites-available/jmatheis.42.fr /etc/nginx/sites-enabled/
 RUN rm /etc/nginx/sites-enabled/default
 
 #test
-COPY /requirements/nginx/index.html /var/www/html/index.html
+# COPY /requirements/nginx/index.html /var/www/html/index.html
+
+# COPY /var/www/wordpress /var/www/html
 
 EXPOSE 443
 
