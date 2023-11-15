@@ -1,42 +1,41 @@
 #!/bin/bash
 
-echo "Creating initial database and user..."
 echo "DB_USER: $DB_USER"
 echo "DB_PASS: $DB_PASS"
-echo "DB_NAME: $DB_NAME"
-echo "DB_ROOT: ${DB_ROOT}"
+echo "DB_NAME: $DB_HOSTNAME"
+echo "DB_ROOT: $DB_ROOTPASS"
 
 # Start MySQL server if its not already running
-if ! service mariadb status > /dev/null; then
+# if ! service mariadb status > /dev/null; then
     service mariadb start
-fi
-
-# Wait for MySQL server to start
-sleep 5
+# fi
 
 # Create initial database and user
-mysql -u root -p"${DB_ROOT}" <<EOF
-CREATE DATABASE IF NOT EXISTS ${DB_NAME};
+echo "Creating initial database and user..."
+mysql -u root -p"${DB_ROOTPASS}" <<EOF
+CREATE DATABASE IF NOT EXISTS ${DB_HOSTNAME};
 CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
-GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%';
+GRANT ALL PRIVILEGES ON ${DB_HOSTNAME}.* TO '${DB_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
 
-echo "initial database '$DB_NAME' and user '$DB_USER' created successfully!"
+# echo "initial database '$DB_NAME' and user '$DB_USER' created successfully!"
 
-# Wait for MySQL server to settle
-sleep 5
-
-if [ ! -d "/var/lib/mysql/wordpress" ]; then
+if [ ! -d "/var/lib/mysql/$DB_DATABASE" ]; then
     echo "Creating wordpress database..."
-    mysql -u root -p"${DB_ROOT}" <<EOF
-    USE ${DB_NAME};
-    CREATE DATABASE IF NOT EXISTS wordpress;
+    mysql -u root -p"${DB_ROOTPASS}" <<EOF
+    USE ${DB_HOSTNAME};
+    CREATE DATABASE IF NOT EXISTS ${DB_DATABASE};
     CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
-    GRANT ALL PRIVILEGES ON wordpress.* TO '${DB_USER}'@'%';
+    GRANT ALL PRIVILEGES ON ${DB_DATABASE}.* TO '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
     FLUSH PRIVILEGES;
 EOF
-    echo "WordPress database created successfully!"
+
+    #Import database in the mysql command line
+    mysql -uroot -p$DB_ROOTPASS $DB_DATABASE < /usr/local/bin/wordpress.sql
+    echo "$DB_DATABASE Database created successfully!"
+else
+    echo "$DB_DATABASE Database already exists"
 fi
 
 exec mysqld

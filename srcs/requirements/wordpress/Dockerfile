@@ -10,22 +10,15 @@ RUN apt-get update && apt-get -y install \
 		php-mysql \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Create the directory to store WordPress files
-RUN mkdir -p /var/www
+# install wordpress cli & put it in /usr/local/bin
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+  && chmod +x wp-cli.phar \
+  && mv wp-cli.phar /usr/local/bin/wp
 
+# Copy the .conf in the html directory
+COPY requirements/wordpress/conf/www.conf /etc/php/7.4/fpm/pool.d/
 # Create the directory for the PID file
-RUN mkdir -p /run/php
-
-# Download & extract Wordpress
-RUN wget https://wordpress.org/latest.tar.gz -O /tmp/latest.tar.gz \
-    && tar -xzvf /tmp/latest.tar.gz -C /var/www \
-    && rm /tmp/latest.tar.gz
-
-# Set the correct permissions
-RUN chown -R www-data:www-data /var/www/wordpress
-RUN chown -R www-data:www-data /var/run/php
-
-COPY requirements/wordpress/conf/www.conf /etc/php/7.4/fpm/pool.d
+RUN mkdir /run/php
 
 #we copy the script, give the right to launch it in local on our computer
 COPY requirements/wordpress/conf/create_wp.sh /usr/local/bin/
@@ -34,4 +27,4 @@ ENTRYPOINT ["/usr/local/bin/create_wp.sh"]
 
 WORKDIR /var/www/html
 EXPOSE 9000
-CMD ["php-fpm7.4"]
+CMD ["/usr/sbin/php-fpm7.4", "-F"]

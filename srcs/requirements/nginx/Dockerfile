@@ -12,18 +12,19 @@ COPY /requirements/nginx/tools/jmatheis.42.fr.crt /etc/nginx/ssl/
 COPY /requirements/nginx/tools/jmatheis.42.fr.key /etc/nginx/ssl/
 
 # Copy Nginx configuration file
-COPY requirements/nginx/conf/nginx.conf /etc/nginx/sites-available/jmatheis.42.fr
+COPY requirements/nginx/conf/nginx.conf /etc/nginx/conf.d
 
 # Create symbolic link to enable the configuration
-RUN ln -s /etc/nginx/sites-available/jmatheis.42.fr /etc/nginx/sites-enabled/
-# Remove the default Nginx configuration
-RUN rm /etc/nginx/sites-enabled/default
+# RUN ln -s /etc/nginx/sites-available/jmatheis.42.fr /etc/nginx/sites-enabled/
+# # Remove the default Nginx configuration
+# RUN rm /etc/nginx/sites-enabled/default
 
 #test
 # COPY /requirements/nginx/index.html /var/www/html/index.html
 
 # COPY /var/www/wordpress /var/www/html
 
+RUN mkdir -p /run/nginx
 EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]

@@ -8,41 +8,56 @@ services:
     container_name: nginx
     ports:
       - "443:443"
+    volumes:
+      - wordpress_data:/var/www/html
     restart: always
+    networks:
+      - inception
+
   mariadb:
     build:
       context: .
       dockerfile: requirements/mariadb/Dockerfile
     env_file:
       - ./.env
-      # args:
-      #   DB_NAME: ${DB_NAME}
-      #   DB_USER: ${DB_USER}
-      #   DB_PASS: ${DB_PASS}
-      #   DB_ROOT: ${DB_ROOT}
     container_name: mariadb
     ports:
       - "3306:3306"
-    # volumes:
-        # - db_volume:/var/lib/mysql
-    # restart: always
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    restart: always
+    networks:
+      - inception
+
   wordpress:
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
-      args:
-        DB_NAME: ${DB_NAME}
-        DB_USER: ${DB_USER}
-        DB_PASS: ${DB_PASS}
-        DB_HOST: ${DB_HOST}
+    env_file:
+      - ./.env
     container_name: wordpress
+    volumes:
+      - wordpress_data:/var/www/html
     depends_on:
       - mariadb
     restart: always
+    networks:
+      - inception
 
-# volumes:
-#   db_volume:
-#     driver_opts:
-#       o: bind
-#       type: none
-#       device: /home/jmatheis/data/mariadb
+networks:
+  inception:
+    driver: bridge
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /Users/juliama/Documents/42Heilbronn/vscode/inception/data/mysql
+      o: bind
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /Users/juliama/Documents/42Heilbronn/vscode/inception/data/wordpress
+      o: bind
