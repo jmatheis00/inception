@@ -31,8 +31,6 @@ if [ ! -d "/var/lib/mysql/$DB_DATABASE" ]; then
     FLUSH PRIVILEGES;
 EOF
 
-    #Import database in the mysql command line
-    mysql -uroot -p$DB_ROOTPASS $DB_DATABASE < /usr/local/bin/wordpress.sql
     echo "$DB_DATABASE Database created successfully!"
 else
     echo "$DB_DATABASE Database already exists"

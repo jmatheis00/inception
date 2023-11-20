@@ -20,11 +20,11 @@ COPY requirements/nginx/conf/nginx.conf /etc/nginx/conf.d
 # RUN rm /etc/nginx/sites-enabled/default
 
 #test
-COPY /requirements/nginx/index.html /var/www/html/index.html
+# COPY /requirements/nginx/index.html /var/www/html/index.html
 
 # COPY /var/www/wordpress /var/www/html
 
-RUN mkdir -p /run/nginx
+# RUN mkdir -p /run/nginx
 EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
