@@ -9,6 +9,7 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 COPY /requirements/mariadb/conf/my.cnf /etc/mysql/my.cnf
+
 RUN mkdir -p /var/log/mysql /var/lib/mysql /var/run/mysqld \
     && chown -R mysql:mysql /var/log/mysql /var/lib/mysql /var/run/mysqld
 
@@ -18,8 +19,6 @@ RUN mkdir -p /var/run/mysqld && chown -R mysql:mysql /var/run/mysqld
 # Copy the script to the container
 COPY /requirements/mariadb/conf/create_db.sh /usr/local/bin/create_db.sh
 RUN chmod +x /usr/local/bin/create_db.sh
-# COPY /requirements/mariadb/conf/wp.sql /usr/local/bin/
-# RUN chmod +x /usr/local/bin/wp.sql
 
 ENTRYPOINT ["/usr/local/bin/create_db.sh"]
 # mysqld becomes the main process for the container

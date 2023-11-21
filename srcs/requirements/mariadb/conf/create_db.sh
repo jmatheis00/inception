@@ -5,35 +5,21 @@ echo "DB_PASS: $DB_PASS"
 echo "DB_NAME: $DB_HOSTNAME"
 echo "DB_ROOT: $DB_ROOTPASS"
 
-# Start MySQL server if its not already running
-# if ! service mariadb status > /dev/null; then
-    service mariadb start
-# fi
-
-# Create initial database and user
-echo "Creating initial database and user..."
-mysql -u root -p"${DB_ROOTPASS}" <<EOF
-CREATE DATABASE IF NOT EXISTS ${DB_HOSTNAME};
-CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
-GRANT ALL PRIVILEGES ON ${DB_HOSTNAME}.* TO '${DB_USER}'@'%';
-FLUSH PRIVILEGES;
-EOF
-
-# echo "initial database '$DB_NAME' and user '$DB_USER' created successfully!"
-
 if [ ! -d "/var/lib/mysql/$DB_DATABASE" ]; then
+    service mariadb start
+    sleep 4
     echo "Creating wordpress database..."
     mysql -u root -p"${DB_ROOTPASS}" <<EOF
-    USE ${DB_HOSTNAME};
     CREATE DATABASE IF NOT EXISTS ${DB_DATABASE};
     CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
     GRANT ALL PRIVILEGES ON ${DB_DATABASE}.* TO '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
+    ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOTPASS';
     FLUSH PRIVILEGES;
 EOF
-
     echo "$DB_DATABASE Database created successfully!"
-else
-    echo "$DB_DATABASE Database already exists"
+    # sleep 2
+    # mysqladmin --user=root --password=$DB_ROOTPASS shutdown
 fi
 
+echo "Outside of statement"
 exec mysqld

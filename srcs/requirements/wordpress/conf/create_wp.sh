@@ -1,24 +1,10 @@
 #!/bin/bash
 
-# set -e
 
-# #create wp-config.php
-# sudo -u jmatheis -i wp config create --dbname=$DB_DATABASE --dbuser=$DB_USER --dbpass=$DB_PASS --dbhost=$DB_HOSTNAME --dbprefix=wp_ --skip-check
-
-# #Install WordPress
-# sudo -u jmatheis -i wp core install --url=http://jmatheis.42.fr --title="Inception" --admin_user="jmatheis" --admin_password="wordpress"
-
-# # Update permalinks
-# sudo -u jmatheis -i wp rewrite structure '/%postname%/' --hard
-
-# # Start the web server
-# exec apache2ctl -D FOREGROUND
-
-#check if wp-config.php exist
-# if [ -f ./wp-config.php ]
-# then
-# 	echo "wordpress already downloaded"
-# else
+echo $DB_DATABASE
+echo $DB_USER
+echo $DB_PASS
+echo $DB_HOSTNAME
 
 ####### MANDATORY PART ##########
 # Create the PHP-FPM error log file if it doesn't exist
@@ -27,21 +13,42 @@ if [ ! -f /var/log/php-fpm/error.log ]; then
     touch /var/log/php-fpm/error.log
     chown -R www-data:www-data /var/log/php-fpm
 fi
-	#Download wordpress and all config file
-	wget http://wordpress.org/latest.tar.gz
-	tar xfz latest.tar.gz
-	mv wordpress/* .
-	rm -rf latest.tar.gz
-	rm -rf wordpress
 
-	# Copy the sample config file
-    cp wp-config-sample.php wp-config.php
-	#Inport env variables in the config file
-	sed -i "s/wordpress/$DB_DATABASE/g" wp-config.php
-	sed -i "s/jmatheis/$DB_USER/g" wp-config.php
-	sed -i "s/pass/$DB_PASS/g" wp-config.php
-	sed -i "s/mysql/$DB_HOSTNAME/g" wp-config.php
-###################################
+cd /var/www/html
+# Download WordPress
+wp core download --path=/var/www/html --allow-root
+
+# Copy the sample config file
+# cp wp-config-sample.php wp-config.php
+
+# Remove existing directories
+wp core is-installed --allow-root || wp core install --url=http://localhost --title="Inception Project jmatheis" \
+	--admin_user=jmatheis --admin_password=wordpress --admin_email=jmatheis@student.42heilbronn.de --allow-root
+wp core config --dbname="$DB_DATABASE" --dbuser="$DB_USER" --dbpass="$DB_PASS" --dbhost="$DB_HOSTNAME" --extra-php <<PHP
+define( 'WP_DEBUG', false );
+PHP
+
+# Install WordPress
+# wp core install --url=http://localhost --title="Inception Project jmatheis" --admin_user=jmatheis --admin_password=wordpress --admin_email=jmatheis@student.42heilbronn.de --allow-root
+# 	#Download wordpress and all config file
+# 	wget http://wordpress.org/latest.tar.gz
+# 	tar xfz latest.tar.gz
+# 	# Remove existing directories
+# 	rm -rf ./wp-admin
+# 	rm -rf ./wp-content
+# 	rm -rf ./wp-includes
+# 	mv wordpress/* .
+# 	rm -rf latest.tar.gz
+# 	rm -rf wordpress
+
+# 	# Copy the sample config file
+#     cp wp-config-sample.php /var/www/html/wp-config.php
+# 	#Inport env variables in the config file
+# 	sed -i "s/wordpress/$DB_DATABASE/g" /var/www/html/wp-config.php
+# 	sed -i "s/jmatheis/$DB_USER/g" /var/www/html/wp-config.php
+# 	sed -i "s/pass/$DB_PASS/g" /var/www/html/wp-config.php
+# 	sed -i "s/mysql/$DB_HOSTNAME/g" /var/www/html/wp-config.php
+# ###################################
 # fi
 
 exec "$@"
