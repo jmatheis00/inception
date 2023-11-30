@@ -1,6 +1,7 @@
 FROM debian:11
 
 RUN apt-get update && apt-get -y install \
+		mariadb-client \
 		wget \
 		curl \
 		bash \
@@ -13,7 +14,7 @@ RUN apt-get update && apt-get -y install \
 # install wordpress cli & put it in /usr/local/bin
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \
-  && mv wp-cli.phar /usr/local/bin/wp
+  && mv wp-cli.phar /usr/local/bin/wp-cli
 
 # Create the directory for the PID file
 RUN mkdir /run/php

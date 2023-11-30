@@ -4,7 +4,7 @@ EXPOSE 3306
 
 RUN apt-get update \
 	&& apt-get upgrade -y \
-	&& apt-get install -y mariadb-server mariadb-client \
+	&& apt-get install -y mariadb-server \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -23,4 +23,4 @@ RUN chmod +x /usr/local/bin/create_db.sh
 ENTRYPOINT ["/usr/local/bin/create_db.sh"]
 # mysqld becomes the main process for the container
 # Command to launch mariadb and enable the database to listen globally
-CMD ["mysqld", "--bind-address=0.0.0.0"]
+# CMD ["mysqld", "--bind-address=0.0.0.0"]
