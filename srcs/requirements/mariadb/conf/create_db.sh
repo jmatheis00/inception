@@ -5,7 +5,8 @@ echo "DB_PASS: $DB_PASS"
 echo "DB_NAME: $DB_HOSTNAME"
 echo "DB_ROOT: $DB_ROOTPASS"
 
-# Perform database setup
+# Database set up
+# creating a database, user, altering root user
 if [ ! -d "/var/lib/mysql/$DB_DATABASE" ]; then
     service mariadb start
     sleep 4
@@ -24,4 +25,5 @@ else
     echo "Database already exists. Skipping setup."
 fi
 
-exec "mysqld_safe"
+# starting MariaDB
+exec mysqld_safe

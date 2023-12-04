@@ -1,7 +1,6 @@
 FROM debian:11
 
 RUN apt-get update && apt-get -y install \
-		mariadb-client \
 		wget \
 		curl \
 		bash \
@@ -18,11 +17,6 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 # Create the directory for the PID file
 RUN mkdir /run/php
-
-# Create the directory for PHP-FPM logs
-RUN mkdir -p /var/log/php-fpm
-# Set permissions for the directory
-RUN chown -R www-data:www-data /var/log/php-fpm
 
 COPY requirements/wordpress/conf/create_wp.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/create_wp.sh
