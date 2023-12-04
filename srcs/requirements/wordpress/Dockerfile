@@ -18,11 +18,6 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 # Create the directory for the PID file
 RUN mkdir /run/php
-# WORKDIR /var/www/html
-# set up wordpress
-# WORKDIR /var/www/html
-# RUN chown -R 101:101 /var/www/html
-
 
 # Create the directory for PHP-FPM logs
 RUN mkdir -p /var/log/php-fpm
@@ -32,12 +27,8 @@ RUN chown -R www-data:www-data /var/log/php-fpm
 COPY requirements/wordpress/conf/create_wp.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/create_wp.sh
 
-
 # Copy the .conf in the html directory
 COPY requirements/wordpress/conf/www.conf /etc/php/7.4/fpm/pool.d/
-
-
-# EXPOSE 9000
 
 #we copy the script, give the right to launch it in local on our computer
 ENTRYPOINT ["/usr/local/bin/create_wp.sh"]

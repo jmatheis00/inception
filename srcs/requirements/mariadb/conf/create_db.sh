@@ -5,12 +5,6 @@ echo "DB_PASS: $DB_PASS"
 echo "DB_NAME: $DB_HOSTNAME"
 echo "DB_ROOT: $DB_ROOTPASS"
 
-# Initialize MariaDB
-
-# Performing root user setup
-# echo "Root user setup: mysql -u root -p${DB_ROOTPASS} --socket=/var/run/mysqld/mysqld.sock -e \"ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOTPASS';\""
-# mysql -u root -p"${DB_ROOTPASS}" --socket=/var/run/mysqld/mysqld.sock -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOTPASS';"
-
 # Perform database setup
 if [ ! -d "/var/lib/mysql/$DB_DATABASE" ]; then
     service mariadb start
@@ -20,6 +14,7 @@ if [ ! -d "/var/lib/mysql/$DB_DATABASE" ]; then
     CREATE DATABASE IF NOT EXISTS ${DB_DATABASE};
     CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
     GRANT ALL PRIVILEGES ON ${DB_DATABASE}.* TO '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
+    ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOTPASS}';
     FLUSH PRIVILEGES;
 EOF
     echo "Database setup completed successfully."
@@ -29,7 +24,4 @@ else
     echo "Database already exists. Skipping setup."
 fi
 
-# Clean up
-
-# Additional logging
 exec "mysqld_safe"

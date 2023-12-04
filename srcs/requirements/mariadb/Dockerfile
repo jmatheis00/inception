@@ -21,6 +21,3 @@ COPY /requirements/mariadb/conf/create_db.sh /usr/local/bin/create_db.sh
 RUN chmod +x /usr/local/bin/create_db.sh
 
 ENTRYPOINT ["/usr/local/bin/create_db.sh"]
-# mysqld becomes the main process for the container
-# Command to launch mariadb and enable the database to listen globally
-# CMD ["mysqld", "--bind-address=0.0.0.0"]
