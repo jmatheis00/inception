@@ -12,9 +12,9 @@ RESET		=	\e[0m
 #   RULES                                #
 # ************************************** #
 
-all: $(NAME)
+all: $(name)
 
-$(NAME):
+$(name):
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up --build -d
 	@printf "$(GREEN)Succesful launch ${name}\n$(RESET)"
