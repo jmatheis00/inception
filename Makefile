@@ -35,17 +35,15 @@ down:
 	$(COMPOSE) $(ENV) down
 	@printf "$(GREEN)Succesful configuration stopping ${name}\n$(RESET)"
 
-re: down
-	$(COMPOSE) $(ENV) up --build -d
+re: fclean $(name)
 	@printf "$(GREEN)Succesful configuration rebuild ${name}\n$(RESET)"
 
-clean: down
-	$(COMPOSE) $(ENV) --volumes --rmi all
+clean:
+	$(COMPOSE) $(ENV) down --volumes --rmi all
 	@printf "$(GREEN)Succesful configuration cleaning ${name}\n$(RESET)"
 
-fclean:
+fclean: clean
 	@sudo rm -rf $(VOLUMES)
-	$(COMPOSE) $(ENV) down --volumes --rmi all
 	@printf "$(GREEN)Succesful total clean of all configurations docker\n$(RESET)"
 
 ps:
