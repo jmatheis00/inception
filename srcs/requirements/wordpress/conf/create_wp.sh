@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo $DB_DATABASE
-echo $DB_USER
-echo $DB_HOSTNAME
+echo $WP_ADMINUSER
+echo $WP_ADMIN_MAIL
 
 cd /var/www/html
 
@@ -19,10 +19,11 @@ if ! wp-cli core is-installed --allow-root; then
 	sed -i "s/'password_here'/'$DB_PASS'/g" wp-config.php
 	sed -i "s/'localhost'/'$DB_HOSTNAME'/g" wp-config.php
 	# # core install completes the installation
-	wp-cli core install --allow-root --url=http://localhost --title="Inception Project jmatheis" \
-		--admin_user=jmatheis --admin_password=wordpress --admin_email=jmatheis@student.42heilbronn.de --allow-root
+	wp-cli core install --url=$DOMAIN_NAME --title=$WP_TITLE \
+		--admin_user=$WP_ADMINUSER --admin_password=$WP_ADMINPASS \
+		--admin_email=$WP_ADMINMAIL --allow-root
 	# Add another user
-	wp-cli user create exampleuser juliamatheis@gmx.de --role=author --user_pass=example --allow-root
+	wp-cli user create $WP_OTHERUSER $WP_OTHERMAIL --role=author --user_pass=$WP_OTHERPASS --allow-root
 	# Install a theme
 	wp-cli theme install twentytwentytwo --activate --allow-root
 else

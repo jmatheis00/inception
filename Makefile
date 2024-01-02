@@ -35,12 +35,12 @@ re: down
 	@printf "$(GREEN)Succesful configuration rebuild ${name}\n$(RESET)"
 
 clean: down
-	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env --volumes -rmi all
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env --volumes --rmi all
 	@printf "$(GREEN)Succesful configuration cleaning ${name}\n$(RESET)"
 
 fclean:
 	@sudo rm -rf ~/data
-	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down --volumes -rmi all
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down --volumes --rmi all
 	@printf "$(GREEN)Succesful total clean of all configurations docker\n$(RESET)"
 
 ps:
