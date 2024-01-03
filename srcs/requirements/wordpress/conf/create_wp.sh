@@ -4,9 +4,8 @@ echo $DB_DATABASE
 echo $WP_ADMINUSER
 echo $WP_ADMIN_MAIL
 
-
 # Create Wordpress Admin, 
-if ! wp-cli core is-installed --path=/var/www/html --allow-root; then
+if [ ! -f "/var/www/html/wp-config.php" ]; then
 	# Download WordPress core files without installing or configuring them
 	wp-cli core download --path=/var/www/html --allow-root
 	# Copy the sample config file
