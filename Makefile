@@ -3,7 +3,7 @@ name = inception
 ENV = --env-file ./srcs/.env
 COMPOSE = docker-compose -f ./srcs/docker-compose.yml
 MAKEDIR = ./srcs/requirements/wordpress/tools/make_dir.sh
-VOLUMES = ~/data
+VOLUMES = /home/${USER}/data
 
 # ************************************** #
 #   COLORS                               #
@@ -29,18 +29,22 @@ $(name):
 build:
 	@bash $(MAKEDIR)
 	$(COMPOSE) $(ENV) --build
-	@printf "$(GREEN)Successful configuration building ${name}\n$(RESET)"
+	@printf "$(GREEN)Successful building ${name}\n$(RESET)"
+
+stop:
+	$(COMPOSE) $(ENV) stop
+	@printf "$(GREEN)Successful building ${name}\n$(RESET)"
 
 down:
 	$(COMPOSE) $(ENV) down
-	@printf "$(GREEN)Succesful configuration stopping ${name}\n$(RESET)"
+	@printf "$(GREEN)Succesful stopping ${name}\n$(RESET)"
 
 re: fclean $(name)
-	@printf "$(GREEN)Succesful configuration rebuild ${name}\n$(RESET)"
+	@printf "$(GREEN)Succesful rebuild ${name}\n$(RESET)"
 
 clean:
 	$(COMPOSE) $(ENV) down --volumes --rmi all
-	@printf "$(GREEN)Succesful configuration cleaning ${name}\n$(RESET)"
+	@printf "$(GREEN)Succesful cleaning ${name}\n$(RESET)"
 
 fclean: clean
 	@sudo rm -rf $(VOLUMES)

@@ -7,8 +7,8 @@ RUN apt-get update \
 
 RUN mkdir -p /etc/nginx/ssl
 
-RUN openssl req -newkey rsa:2048 \
-	-keyout /etc/nginx/ssl/jmatheis.42.fr.key -x509 -days 365 -nodes \
+RUN openssl req -x509 -days 365 -nodes \
+	-keyout /etc/nginx/ssl/jmatheis.42.fr.key \
 	-out /etc/nginx/ssl/jmatheis.42.fr.crt \
 	-subj "/CN=jmatheis.42.fr/O=42Heilbronn/OU=42Student"
 
