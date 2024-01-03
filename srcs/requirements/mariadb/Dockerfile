@@ -7,7 +7,7 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY /requirements/mariadb/conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+COPY /requirements/mariadb/conf/my.cnf /etc/mysql/my.cnf
 
 RUN mkdir -p /var/log/mysql /var/lib/mysql /var/run/mysqld \
     && chown -R mysql:mysql /var/log/mysql /var/lib/mysql /var/run/mysqld
