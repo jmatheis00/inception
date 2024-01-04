@@ -1,6 +1,7 @@
 FROM debian:11
 
 RUN apt-get update && apt-get -y install \
+		mariadb-client \
 		wget \
 		curl \
 		bash \
