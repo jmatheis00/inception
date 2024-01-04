@@ -11,16 +11,14 @@ if [ ! -d "/var/lib/mysql/$DB_DATABASE" ]; then
     service mariadb start
     sleep 4
     echo "Creating database and user..."
-    mysql -u root -p"${DB_ROOTPASS}" <<EOF
-    CREATE DATABASE IF NOT EXISTS ${DB_DATABASE};
-    CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
-    GRANT ALL PRIVILEGES ON ${DB_DATABASE}.* TO '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
-    ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOTPASS}';
-    FLUSH PRIVILEGES;
-EOF
-    echo "Database setup completed successfully."
+    mysql -u root -p"${DB_ROOTPASS}" -e "CREATE DATABASE IF NOT EXISTS ${DB_DATABASE};"
+    mysql -u root -p"${DB_ROOTPASS}" -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';"
+    mysql -u root -p"${DB_ROOTPASS}" -e "GRANT ALL PRIVILEGES ON ${DB_DATABASE}.* TO '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';"
+    mysql -u root -p"${DB_ROOTPASS}" -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOTPASS}';"
+    mysql -u root -p"${DB_ROOTPASS}" -e "FLUSH PRIVILEGES;"
     sleep 2
-    service mariadb stop
+    mysqladmin -u root -p$DB_ROOTPASS shutdown
+    echo "Database setup completed successfully."
 else
     echo "Database already exists. Skipping setup."
 fi

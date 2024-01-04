@@ -2,8 +2,10 @@ name = inception
 
 ENV = --env-file ./srcs/.env
 COMPOSE = docker-compose -f ./srcs/docker-compose.yml
-MAKEDIR = ./srcs/requirements/wordpress/tools/make_dir.sh
+# MAKEDIR = ./srcs/requirements/wordpress/tools/make_dir.sh
 VOLUMES = /home/${USER}/data
+VOLUME_WP = $(VOLUMES)/wordpress
+VOLUME_DB = $(VOLUMES)/mariadb
 
 # ************************************** #
 #   COLORS                               #
@@ -19,17 +21,19 @@ RESET		=	\e[0m
 
 all: $(name)
 
-$(name):
-	@bash $(MAKEDIR)
+$(name): makedirs
 	$(COMPOSE) $(ENV) up --build -d
 	@printf "$(GREEN)Succesful launch ${name}\n$(RESET)"
 
 # --build: rebuilds the Docker images before starting the container
 # ensures that any changes made are incorporated into the images before starting
-build:
-	@bash $(MAKEDIR)
+
+build: makedirs
 	$(COMPOSE) $(ENV) --build
 	@printf "$(GREEN)Successful building ${name}\n$(RESET)"
+
+makedirs:
+	mkdir -p $(VOLUME_DB) $(VOLUME_WP)
 
 stop:
 	$(COMPOSE) $(ENV) stop
