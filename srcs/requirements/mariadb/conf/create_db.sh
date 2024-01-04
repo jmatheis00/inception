@@ -1,9 +1,6 @@
 #!/bin/bash
 
 echo "DB_USER: $DB_USER"
-echo "DB_PASS: $DB_PASS"
-echo "DB_NAME: $DB_HOSTNAME"
-echo "DB_ROOT: $DB_ROOTPASS"
 
 # Database set up
 # creating a database, user, altering root user

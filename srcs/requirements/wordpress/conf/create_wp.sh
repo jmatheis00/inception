@@ -15,28 +15,27 @@ done
 # Create Wordpress Admin, 
 if ! wp-cli core is-installed --path=/var/www/html --allow-root 2>/dev/null; then
 	echo "Download Wordpress core file"
-	# Download WordPress core files without installing or configuring them
+	# Download WordPress core files
 	wp-cli core download --path=/var/www/html --allow-root
 
+	# configure & create wp config file
 	echo "Replacing placeholders"
 	wp-cli config create --path=/var/www/html --allow-root \
-		--dbname=$DB_DATABASE \
-		--dbuser=$DB_USER \
-		--dbpass=$DB_PASS \
-		--dbhost=$DB_HOSTNAME
+		--dbname=$DB_DATABASE --dbuser=$DB_USER \
+		--dbpass=$DB_PASS --dbhost=$DB_HOSTNAME
 
+	# core install completes the installation
 	echo "core install"
-	# # core install completes the installation
 	wp-cli core install --url=$DOMAIN_NAME --title=$WP_TITLE \
 		--admin_user=$WP_ADMINUSER --admin_password=$WP_ADMINPASS \
 		--admin_email=$WP_ADMINMAIL --allow-root
 	
-	echo "add another user"
 	# Add another user
+	echo "add another user"
 	wp-cli user create $WP_OTHERUSER $WP_OTHERMAIL --role=author --user_pass=$WP_OTHERPASS --allow-root
 	
-	echo "install theme"
 	# Install a theme
+	echo "install theme"
 	wp-cli theme install twentytwentytwo --activate --allow-root
 else
 	echo "WordPress already installed. Skipping set up."
