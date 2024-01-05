@@ -20,5 +20,5 @@ else
     echo "Database already exists. Skipping setup."
 fi
 
-# starting MariaDB
+# starting MariaDB in safe mode
 exec mysqld_safe
